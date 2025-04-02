@@ -24,6 +24,7 @@
 #define CONFIG_EXAMPLES_DIR "Creality/Ender-5 Plus/BigTreeTech SKR 3"
 
 #define ENDER5_USE_MICROSWISS
+#define DIAG_JUMPERS_REMOVED
 
 /**
  * Configuration.h
@@ -662,7 +663,7 @@
 // Above this temperature the heater will be switched off.
 // This can protect components from overheating, but NOT from shorts and failures.
 // (Use MINTEMP for thermistor short/failure protection.)
-#define HEATER_0_MAXTEMP 275
+#define HEATER_0_MAXTEMP 290
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
@@ -1305,7 +1306,7 @@
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
 #if ENABLED(ENDER5_USE_MICROSWISS)
-  #define DEFAULT_AXIS_STEPS_PER_UNIT { 80, 80, 800, 137.6 }
+  #define DEFAULT_AXIS_STEPS_PER_UNIT { 320, 320, 800, 137.6 }
 #else
   #define DEFAULT_AXIS_STEPS_PER_UNIT { 80, 80, 800, 93 }
 #endif
@@ -1403,7 +1404,7 @@
  *
  * See https://github.com/synthetos/TinyG/wiki/Jerk-Controlled-Motion-Explained
  */
-//#define S_CURVE_ACCELERATION
+#define S_CURVE_ACCELERATION
 
 //===========================================================================
 //============================= Z Probe Options =============================
@@ -1828,7 +1829,7 @@
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 #define INVERT_X_DIR false
 #define INVERT_Y_DIR false
-#define INVERT_Z_DIR false
+#define INVERT_Z_DIR true
 //#define INVERT_I_DIR false
 //#define INVERT_J_DIR false
 //#define INVERT_K_DIR false
@@ -1870,8 +1871,8 @@
 
 // Direction of endstops when homing; 1=MAX, -1=MIN
 // :[-1,1]
-#define X_HOME_DIR  1
-#define Y_HOME_DIR  1
+#define X_HOME_DIR  -1
+#define Y_HOME_DIR  -1
 #define Z_HOME_DIR -1
 //#define I_HOME_DIR -1
 //#define J_HOME_DIR -1
@@ -2846,7 +2847,7 @@
 // If you have a speaker that can produce tones, enable it here.
 // By default Marlin assumes you have a buzzer with a fixed frequency.
 //
-//#define SPEAKER
+#define SPEAKER
 
 //
 // The duration and frequency for the UI feedback sound.
@@ -2855,8 +2856,8 @@
 // Note: Test audio output with the G-Code:
 //  M300 S<frequency Hz> P<duration ms>
 //
-//#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 2
-//#define LCD_FEEDBACK_FREQUENCY_HZ 5000
+#define LCD_FEEDBACK_FREQUENCY_DURATION_MS 20
+#define LCD_FEEDBACK_FREQUENCY_HZ 2000
 
 //
 // Tone queue size, used to keep beeps from blocking execution.
