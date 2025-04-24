@@ -23,15 +23,22 @@
 
 #define CONFIG_EXAMPLES_DIR "Creality/Ender-5 Plus/BigTreeTech SKR 3"
 
-/* If you use a microswiss direct drive choose ENDER5_USE_MICROSWISS, otherwise comment it out */
+/* If you use a microswiss direct drive choose
+   ENDER5_USE_MICROSWISS otherwise comment it out */
 #define ENDER5_USE_MICROSWISS
 
-/* If you use BLTOUCH choose ENDER5_USE_BLTOUCH, otherwise comment it out */
+/* If you use BLTOUCH choose ENDER5_USE_BLTOUCH
+   otherwise comment it out */
 #define ENDER5_USE_BLTOUCH
 
-/* If you use the Z-stop next to the Y-stop choose USE_Z_STOP_NEXT_TO_Y_STOP, if you use the
-   pins next to the BLTOUCH pins, leave it commented out */
+/* If you use the Z-stop next to the Y-stop on the board
+   choose USE_Z_STOP_NEXT_TO_Y_STOP if you use the
+   pins next to the BLTOUCH pins on the board
+   leave it commented out */
 //#define USE_Z_STOP_NEXT_TO_Y_STOP
+
+/* When you are sure that the jumpers are correct choose this setting
+  to remove the warning when building the firmware*/
 #define DIAG_JUMPERS_REMOVED
 
 /**
@@ -74,7 +81,7 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(Oestergaard, Creality Ender-5 Plus)" // Original author or contributor.
+#define STRING_CONFIG_H_AUTHOR "(H. Oestergaard, Creality Ender-5 Plus)" // Original author or contributor.
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 // @section machine
@@ -149,7 +156,7 @@
 
 // Printer's unique ID, used by some programs to differentiate between machines.
 // Choose your own or use a service like https://www.uuidgenerator.net/version4
-#define MACHINE_UUID "8cd276e6-41c7-4439-8f4e-f188537ebdac"
+#define MACHINE_UUID "d6c658ab-7412-4068-a959-269097f75e16"
 
 // @section stepper drivers
 
@@ -1313,8 +1320,11 @@
  * Override with M92 (when enabled below)
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 800, 93.02 }
-
+#if ENABLED(ENDER5_USE_MICROSWISS)
+  #define DEFAULT_AXIS_STEPS_PER_UNIT { 80, 80, 800, 140.5 }
+#else
+  #define DEFAULT_AXIS_STEPS_PER_UNIT { 80, 80, 800, 93 }
+#endif
 /**
  * Enable support for M92. Disable to save at least ~530 bytes of flash.
  */
@@ -1850,7 +1860,7 @@
 // @section extruder
 
 // For direct drive extruder v9 set to true, for geared extruder set to false.
-#define INVERT_E0_DIR false
+#define INVERT_E0_DIR true
 #define INVERT_E1_DIR false
 #define INVERT_E2_DIR false
 #define INVERT_E3_DIR false
@@ -2132,6 +2142,7 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 #if ENABLED(ENDER5_USE_BLTOUCH)
+  //#define AUTO_BED_LEVELING_UBL
   #define AUTO_BED_LEVELING_BILINEAR
 #else
   #define AUTO_BED_LEVELING_UBL
@@ -2163,7 +2174,7 @@
  */
 #define PREHEAT_BEFORE_LEVELING
 #if ENABLED(PREHEAT_BEFORE_LEVELING)
-  #define LEVELING_NOZZLE_TEMP 120   // (°C) Only applies to E0 at this time
+  #define LEVELING_NOZZLE_TEMP 140   // (°C) Only applies to E0 at this time
   #define LEVELING_BED_TEMP     50
 #endif
 
@@ -2176,7 +2187,7 @@
 
 #if ANY(MESH_BED_LEVELING, AUTO_BED_LEVELING_UBL, PROBE_MANUALLY)
   // Set a height for the start of manual adjustment
-  #define MANUAL_PROBE_START_Z 0.2  // (mm) Comment out to use the last-measured height
+  //#define MANUAL_PROBE_START_Z 0.2  // (mm) Comment out to use the last-measured height
 #endif
 
 #if ANY(MESH_BED_LEVELING, AUTO_BED_LEVELING_BILINEAR, AUTO_BED_LEVELING_UBL)
@@ -2225,7 +2236,7 @@
 #if ANY(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 4
+  #define GRID_MAX_POINTS_X 5
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Probe along the Y axis, advancing X after each column
@@ -2325,11 +2336,13 @@
 #define LCD_BED_TRAMMING
 
 #if ENABLED(LCD_BED_TRAMMING)
-  #define BED_TRAMMING_INSET_LFRB { 30, 30, 30, 30 } // (mm) Left, Front, Right, Back insets
+  #define BED_TRAMMING_INSET_LFRB { 48, 30, 48, 30 } // (mm) Left, Front, Right, Back insets
   #define BED_TRAMMING_HEIGHT      0.0        // (mm) Z height of nozzle at tramming points
   #define BED_TRAMMING_Z_HOP       4.0        // (mm) Z raise between tramming points
   //#define BED_TRAMMING_INCLUDE_CENTER       // Move to the center after the last corner
-  //#define BED_TRAMMING_USE_PROBE
+  #if ENABLED(ENDER5_USE_BLTOUCH)
+    #define BED_TRAMMING_USE_PROBE
+  #endif
   #if ENABLED(BED_TRAMMING_USE_PROBE)
     #define BED_TRAMMING_PROBE_TOLERANCE 0.1  // (mm)
     #define BED_TRAMMING_VERIFY_RAISED        // After adjustment triggers the probe, re-probe to verify
@@ -2429,13 +2442,13 @@
  *    +-------------->X     +-------------->X     +-------------->Y
  *     XY_SKEW_FACTOR        XZ_SKEW_FACTOR        YZ_SKEW_FACTOR
  */
-//#define SKEW_CORRECTION
+#define SKEW_CORRECTION
 
 #if ENABLED(SKEW_CORRECTION)
   // Input all length measurements here:
-  #define XY_DIAG_AC 282.8427124746
-  #define XY_DIAG_BD 282.8427124746
-  #define XY_SIDE_AD 200
+  #define XY_DIAG_AC 99.975
+  #define XY_DIAG_BD 99.98
+  #define XY_SIDE_AD 70.6311
 
   // Or, set the XY skew factor directly:
   //#define XY_SKEW_FACTOR 0.0
