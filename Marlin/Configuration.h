@@ -41,6 +41,11 @@
   to remove the warning when building the firmware*/
 #define DIAG_JUMPERS_REMOVED
 
+
+#define PROBE_OFFSET_X_AXIS -46
+#define PROBE_OFFSET_Y_AXIS -13
+#define PROBE_OFFSET_Z_AXIS -1.72
+
 /**
  * Configuration.h
  *
@@ -1675,7 +1680,7 @@
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { -46, -13, -2.10 }
+#define NOZZLE_TO_PROBE_OFFSET { PROBE_OFFSET_X_AXIS, PROBE_OFFSET_Y_AXIS, PROBE_OFFSET_Z_AXIS }
 
 // Enable and set to use a specific tool for probing. Disable to allow any tool.
 #define PROBING_TOOL 0
@@ -2142,8 +2147,8 @@
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 #if ENABLED(ENDER5_USE_BLTOUCH)
-  //#define AUTO_BED_LEVELING_UBL
-  #define AUTO_BED_LEVELING_BILINEAR
+  #define AUTO_BED_LEVELING_UBL
+  //#define AUTO_BED_LEVELING_BILINEAR
 #else
   #define AUTO_BED_LEVELING_UBL
 #endif
@@ -2166,8 +2171,8 @@
  * these options to restore the prior leveling state or to always enable
  * leveling immediately after G28.
  */
-#define RESTORE_LEVELING_AFTER_G28
-//#define ENABLE_LEVELING_AFTER_G28
+//#define RESTORE_LEVELING_AFTER_G28
+#define ENABLE_LEVELING_AFTER_G28
 
 /**
  * Auto-leveling needs preheating
@@ -2268,11 +2273,11 @@
 
   //#define MESH_EDIT_GFX_OVERLAY   // Display a graphics overlay while editing the mesh
 
-  #define MESH_INSET 1              // Set Mesh bounds as an inset region of the bed
-  #define GRID_MAX_POINTS_X 5       // Don't use more than 15 points per axis, implementation limited.
+  #define MESH_INSET 1             // Set Mesh bounds as an inset region of the bed
+  #define GRID_MAX_POINTS_X 10       // Don't use more than 15 points per axis, implementation limited.
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  //#define UBL_HILBERT_CURVE       // Use Hilbert distribution for less travel when probing multiple points
+  #define UBL_HILBERT_CURVE       // Use Hilbert distribution for less travel when probing multiple points
 
   //#define UBL_TILT_ON_MESH_POINTS         // Use nearest mesh points with G29 J for better Z reference
   //#define UBL_TILT_ON_MESH_POINTS_3POINT  // Use nearest mesh points with G29 J0 (3-point)
@@ -2283,7 +2288,7 @@
   //#define UBL_Z_RAISE_WHEN_OFF_MESH 2.5 // When the nozzle is off the mesh, this value is used
                                           // as the Z-Height correction value.
 
-  //#define UBL_MESH_WIZARD         // Run several commands in a row to get a complete mesh
+  #define UBL_MESH_WIZARD         // Run several commands in a row to get a complete mesh
 
   /**
    * Probing not allowed within the position of an obstacle.
@@ -2329,7 +2334,7 @@
 #if ENABLED(LCD_BED_LEVELING)
   #define MESH_EDIT_Z_STEP  0.025 // (mm) Step size while manually probing Z axis.
   #define LCD_PROBE_Z_RANGE 4     // (mm) Z Range centered on Z_MIN_POS for LCD Z adjustment
-  //#define MESH_EDIT_MENU        // Add a menu to edit mesh points
+  #define MESH_EDIT_MENU        // Add a menu to edit mesh points
 #endif
 
 // Add a menu item to move between bed corners for manual bed adjustment
